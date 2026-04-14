@@ -10,11 +10,12 @@ interface SearchConfigFormProps {
 }
 
 const LOCATION_OPTIONS = [
-  { value: 'sk', label: 'SK - Bazos.sk' },
-  { value: 'cz', label: 'CZ - Bazos.cz (celé)' },
+  { value: 'sk', label: 'SK - Celé Slovensko' },
+  { value: 'sk-pezinok', label: 'SK - Pezinok (50km)' },
+  { value: 'sk-bratislava', label: 'SK - Bratislava (50km)' },
+  { value: 'cz', label: 'CZ - Celé Česko' },
   { value: 'cz-ostrava', label: 'CZ - Ostrava (30km)' },
   { value: 'cz-zlin', label: 'CZ - Zlín (30km)' },
-  { value: 'cz-prague', label: 'CZ - Praha (50km)' },
 ];
 
 export default function SearchConfigForm({ config, onSave, onCancel }: SearchConfigFormProps) {
