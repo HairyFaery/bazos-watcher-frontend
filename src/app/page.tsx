@@ -13,6 +13,7 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -77,6 +78,40 @@ export default function Home() {
     setEditingProduct(null);
   };
 
+  const handleSelectAll = () => {
+    if (selectedIds.size === filteredProducts.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredProducts.map(p => p.id)));
+    }
+  };
+
+  const handleSelect = (id: number) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Naozaj chcete vymazať ${selectedIds.size} vybraných produktov?`)) return;
+
+    for (const id of selectedIds) {
+      await fetch(`/api/products/${id}`, { method: 'DELETE' });
+    }
+    setSelectedIds(new Set());
+    await fetchProducts();
+  };
+
+  const filteredProducts = products.filter(p =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.source.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -104,6 +139,30 @@ export default function Home() {
           />
         </div>
 
+        {!showForm && filteredProducts.length > 0 && (
+          <div className="mb-4 flex items-center gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selectedIds.size === filteredProducts.length && filteredProducts.length > 0}
+                onChange={handleSelectAll}
+                className="w-4 h-4 rounded border-gray-300"
+              />
+              <span className="text-sm text-gray-700">
+                {selectedIds.size === filteredProducts.length ? 'Odznačiť všetko' : 'Označiť všetko'}
+              </span>
+            </label>
+            {selectedIds.size > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors text-sm"
+              >
+                Vymazať ({selectedIds.size})
+              </button>
+            )}
+          </div>
+        )}
+
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -122,10 +181,11 @@ export default function Home() {
           </div>
         ) : (
           <ProductList
-            products={products}
+            products={filteredProducts}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            searchQuery={searchQuery}
+            selectedIds={selectedIds}
+            onSelect={handleSelect}
           />
         )}
       </main>

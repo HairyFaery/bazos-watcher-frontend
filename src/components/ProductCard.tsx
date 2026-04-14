@@ -6,9 +6,11 @@ interface ProductCardProps {
   product: Product;
   onEdit: (product: Product) => void;
   onDelete: (id: number) => void;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-export default function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
+export default function ProductCard({ product, onEdit, onDelete, isSelected, onSelect }: ProductCardProps) {
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('sk-SK', {
       day: '2-digit',
@@ -20,19 +22,27 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden">
-      {product.imageUrl && (
-        <div className="relative w-full h-48 mb-3 bg-gray-100 rounded">
-          <img
-            src={product.imageUrl}
-            alt={product.title}
-            className="w-full h-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
-          />
-        </div>
-      )}
+    <div className={`bg-white rounded-lg shadow-md p-4 border ${isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'} hover:shadow-lg transition-shadow overflow-hidden`}>
+      <div className="flex items-start gap-3 mb-3">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onSelect}
+          className="mt-1 w-4 h-4 rounded border-gray-300 cursor-pointer"
+        />
+        {product.imageUrl && (
+          <div className="relative w-full h-48 bg-gray-100 rounded">
+            <img
+              src={product.imageUrl}
+              alt={product.title}
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+      </div>
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 flex-1 pr-2">
           {product.title}
