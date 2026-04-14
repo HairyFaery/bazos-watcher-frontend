@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     const config = await createSearchConfig({
       keyword: body.keyword,
       label: body.label,
+      minPrice: body.minPrice ?? 0,
       maxPrice: body.maxPrice ?? 1000,
       currency: body.currency ?? 'EUR',
       whitelist: body.whitelist ?? [],
