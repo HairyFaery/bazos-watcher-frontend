@@ -4,6 +4,7 @@ export interface Product {
   price: number;
   currency: string;
   link: string;
+  imageUrl?: string;
   source: string;
   lastSeen: number;
   createdAt: Date;

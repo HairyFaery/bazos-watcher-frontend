@@ -20,7 +20,19 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden">
+      {product.imageUrl && (
+        <div className="relative w-full h-48 mb-3 bg-gray-100 rounded">
+          <img
+            src={product.imageUrl}
+            alt={product.title}
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        </div>
+      )}
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 flex-1 pr-2">
           {product.title}

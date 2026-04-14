@@ -1,4 +1,8 @@
 import { sql } from '@vercel/postgres';
+import { config } from 'dotenv';
+import { join } from 'path';
+
+config({ path: join(process.cwd(), '.env.local') });
 
 async function setupDatabase() {
   console.log('Setting up database...');
@@ -10,6 +14,7 @@ async function setupDatabase() {
       price DECIMAL(12, 2) NOT NULL,
       currency VARCHAR(10) DEFAULT 'EUR',
       link VARCHAR(1000) NOT NULL,
+      image_url VARCHAR(1000) DEFAULT '',
       source VARCHAR(100) DEFAULT 'manual',
       last_seen BIGINT DEFAULT EXTRACT(EPOCH FROM NOW()) * 1000,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
