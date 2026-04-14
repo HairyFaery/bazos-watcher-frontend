@@ -10,17 +10,18 @@ interface SearchConfigFormProps {
 }
 
 const LOCATION_OPTIONS = [
-  { value: 'sk', label: 'Slovensko (Bazos.sk)' },
-  { value: 'cz', label: 'Česko (Bazos.cz)' },
-  { value: 'cz-ostrava', label: 'Ostrava (CZ)' },
-  { value: 'cz-zlin', label: 'Zlín (CZ)' },
-  { value: 'cz-prague', label: 'Praha (CZ)' },
+  { value: 'sk', label: 'SK - Bazos.sk' },
+  { value: 'cz', label: 'CZ - Bazos.cz (celé)' },
+  { value: 'cz-ostrava', label: 'CZ - Ostrava (30km)' },
+  { value: 'cz-zlin', label: 'CZ - Zlín (30km)' },
+  { value: 'cz-prague', label: 'CZ - Praha (50km)' },
 ];
 
 export default function SearchConfigForm({ config, onSave, onCancel }: SearchConfigFormProps) {
   const [formData, setFormData] = useState({
     keyword: '',
     label: '',
+    minPrice: 0,
     maxPrice: 1000,
     currency: 'EUR',
     whitelist: '',
@@ -35,6 +36,7 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
       setFormData({
         keyword: config.keyword,
         label: config.label,
+        minPrice: config.minPrice || 0,
         maxPrice: config.maxPrice,
         currency: config.currency,
         whitelist: config.whitelist.join(', '),
@@ -61,6 +63,7 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
       await onSave({
         keyword: formData.keyword,
         label: formData.label,
+        minPrice: formData.minPrice || undefined,
         maxPrice: formData.maxPrice,
         currency: formData.currency,
         whitelist: formData.whitelist.split(',').map(s => s.trim()).filter(Boolean),
@@ -104,7 +107,18 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Min cena</label>
+            <input
+              type="number"
+              value={formData.minPrice}
+              onChange={(e) => setFormData({ ...formData, minPrice: Number(e.target.value) })}
+              min="0"
+              placeholder="0"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Max cena</label>
             <input
@@ -162,7 +176,7 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
             type="text"
             value={formData.blacklist}
             onChange={(e) => setFormData({ ...formData, blacklist: e.target.value })}
-            placeholder="napr. comfort 1, comfort 2"
+            placeholder="napr. comfort 1, comfort 2, prenájom"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <p className="text-xs text-gray-500 mt-1">Oddelené čiarkou</p>

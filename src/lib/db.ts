@@ -60,7 +60,7 @@ export async function deleteProduct(id: number): Promise<boolean> {
 
 export async function getSearchConfigs(): Promise<SearchConfig[]> {
   const { rows } = await sql`
-    SELECT id, keyword, label, max_price as "maxPrice", currency, whitelist, 
+    SELECT id, keyword, label, min_price as "minPrice", max_price as "maxPrice", currency, whitelist, 
            blacklist, locations, active
     FROM search_configs 
     ORDER BY created_at DESC
@@ -75,10 +75,11 @@ export async function getSearchConfigs(): Promise<SearchConfig[]> {
 
 export async function createSearchConfig(input: Omit<SearchConfig, 'id'>): Promise<SearchConfig> {
   const { rows } = await sql`
-    INSERT INTO search_configs (keyword, label, max_price, currency, whitelist, blacklist, locations, active)
+    INSERT INTO search_configs (keyword, label, min_price, max_price, currency, whitelist, blacklist, locations, active)
     VALUES (
       ${input.keyword}, 
       ${input.label}, 
+      ${input.minPrice ?? 0}, 
       ${input.maxPrice}, 
       ${input.currency}, 
       ${JSON.stringify(input.whitelist)}, 
@@ -86,7 +87,7 @@ export async function createSearchConfig(input: Omit<SearchConfig, 'id'>): Promi
       ${JSON.stringify(input.locations)},
       ${input.active ?? true}
     )
-    RETURNING id, keyword, label, max_price as "maxPrice", currency, whitelist, 
+    RETURNING id, keyword, label, min_price as "minPrice", max_price as "maxPrice", currency, whitelist, 
               blacklist, locations, active
   `;
   const row = rows[0] as any;
@@ -100,7 +101,7 @@ export async function createSearchConfig(input: Omit<SearchConfig, 'id'>): Promi
 
 export async function getSearchConfigById(id: number): Promise<SearchConfig | null> {
   const { rows } = await sql`
-    SELECT id, keyword, label, max_price as "maxPrice", currency, whitelist, 
+    SELECT id, keyword, label, min_price as "minPrice", max_price as "maxPrice", currency, whitelist, 
            blacklist, locations, active
     FROM search_configs 
     WHERE id = ${id}
@@ -117,7 +118,7 @@ export async function getSearchConfigById(id: number): Promise<SearchConfig | nu
 
 export async function updateSearchConfig(id: number, input: UpdateSearchConfigInput): Promise<SearchConfig | null> {
   if (input.keyword === undefined && input.label === undefined && 
-      input.maxPrice === undefined && input.currency === undefined &&
+      input.minPrice === undefined && input.maxPrice === undefined && input.currency === undefined &&
       input.whitelist === undefined && input.blacklist === undefined &&
       input.locations === undefined && input.active === undefined) {
     return getSearchConfigById(id);
@@ -128,6 +129,7 @@ export async function updateSearchConfig(id: number, input: UpdateSearchConfigIn
     SET 
       keyword = COALESCE(${input.keyword}, keyword),
       label = COALESCE(${input.label}, label),
+      min_price = COALESCE(${input.minPrice}, min_price),
       max_price = COALESCE(${input.maxPrice}, max_price),
       currency = COALESCE(${input.currency}, currency),
       whitelist = COALESCE(${input.whitelist ? JSON.stringify(input.whitelist) : null}, whitelist),
@@ -135,7 +137,7 @@ export async function updateSearchConfig(id: number, input: UpdateSearchConfigIn
       locations = COALESCE(${input.locations ? JSON.stringify(input.locations) : null}, locations),
       active = COALESCE(${input.active}, active)
     WHERE id = ${id}
-    RETURNING id, keyword, label, max_price as "maxPrice", currency, whitelist, 
+    RETURNING id, keyword, label, min_price as "minPrice", max_price as "maxPrice", currency, whitelist, 
               blacklist, locations, active
   `;
   if (!rows[0]) return null;

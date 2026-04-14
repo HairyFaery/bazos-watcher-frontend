@@ -15,6 +15,7 @@ export interface SearchConfig {
   id?: number;
   keyword: string;
   label: string;
+  minPrice?: number;
   maxPrice: number;
   currency: string;
   whitelist: string[];
@@ -42,6 +43,7 @@ export interface UpdateProductInput {
 export interface UpdateSearchConfigInput {
   keyword?: string;
   label?: string;
+  minPrice?: number;
   maxPrice?: number;
   currency?: string;
   whitelist?: string[];

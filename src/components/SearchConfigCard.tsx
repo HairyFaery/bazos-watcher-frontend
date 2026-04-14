@@ -29,7 +29,7 @@ export default function SearchConfigCard({ config, onEdit, onDelete, onToggle }:
       
       <div className="space-y-1 text-sm text-gray-600 mb-3">
         <p><span className="font-medium">Kľúčové slovo:</span> {config.keyword}</p>
-        <p><span className="font-medium">Max cena:</span> {config.maxPrice} {config.currency}</p>
+        <p><span className="font-medium">Cena:</span> {config.minPrice || 0} - {config.maxPrice} {config.currency}</p>
         <p><span className="font-medium">Lokality:</span> {config.locations.join(', ')}</p>
       </div>
 
