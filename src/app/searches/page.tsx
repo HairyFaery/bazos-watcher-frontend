@@ -49,6 +49,8 @@ export default function SearchesPage() {
     await fetchConfigs();
     setShowForm(false);
     setEditingConfig(null);
+
+    fetch('/api/trigger-scrape', { method: 'POST' });
   };
 
   const handleEdit = (config: SearchConfig) => {

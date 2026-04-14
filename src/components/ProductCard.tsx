@@ -21,8 +21,15 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onS
     });
   };
 
+  const isNew = product.createdAt && Date.now() - new Date(product.createdAt).getTime() < 30 * 60 * 1000;
+
   return (
-    <div className={`bg-white rounded-lg shadow-md p-4 border ${isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'} hover:shadow-lg transition-shadow overflow-hidden`}>
+    <div className={`bg-white rounded-lg shadow-md p-4 border ${isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'} hover:shadow-lg transition-shadow overflow-hidden relative`}>
+      {isNew && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded animate-pulse z-10">
+          NOVÉ
+        </span>
+      )}
       <div className="flex items-start gap-3 mb-3">
         <input
           type="checkbox"
