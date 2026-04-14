@@ -37,9 +37,16 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
         <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 flex-1 pr-2">
           {product.title}
         </h3>
-        <span className="text-lg font-bold text-green-600 whitespace-nowrap">
-          {product.price} {product.currency}
-        </span>
+        <div className="text-right">
+          <span className="text-lg font-bold text-green-600 whitespace-nowrap">
+            {product.price} {product.currency}
+          </span>
+          {product.priceEur && product.currency === 'CZK' && (
+            <span className="block text-sm text-gray-500">
+              (~{product.priceEur} EUR)
+            </span>
+          )}
+        </div>
       </div>
       
       <div className="text-sm text-gray-500 mb-3">

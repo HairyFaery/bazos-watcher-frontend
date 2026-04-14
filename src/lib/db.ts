@@ -3,7 +3,7 @@ import { Product, SearchConfig, CreateProductInput, UpdateProductInput, UpdateSe
 
 export async function getProducts(): Promise<Product[]> {
   const { rows } = await sql`
-    SELECT id, title, price, currency, link, image_url as "imageUrl", source, last_seen as "lastSeen", 
+    SELECT id, title, price, currency, price_eur as "priceEur", link, image_url as "imageUrl", source, last_seen as "lastSeen", 
            created_at as "createdAt", updated_at as "updatedAt"
     FROM products 
     ORDER BY created_at DESC
@@ -13,7 +13,7 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getProductById(id: number): Promise<Product | null> {
   const { rows } = await sql`
-    SELECT id, title, price, currency, link, image_url as "imageUrl", source, last_seen as "lastSeen",
+    SELECT id, title, price, currency, price_eur as "priceEur", link, image_url as "imageUrl", source, last_seen as "lastSeen",
            created_at as "createdAt", updated_at as "updatedAt"
     FROM products 
     WHERE id = ${id}
@@ -25,7 +25,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
   const { rows } = await sql`
     INSERT INTO products (title, price, currency, link, source, last_seen)
     VALUES (${input.title}, ${input.price}, ${input.currency}, ${input.link}, ${input.source}, ${Date.now()})
-    RETURNING id, title, price, currency, link, image_url as "imageUrl", source, last_seen as "lastSeen", 
+    RETURNING id, title, price, currency, price_eur as "priceEur", link, image_url as "imageUrl", source, last_seen as "lastSeen", 
               created_at as "createdAt", updated_at as "updatedAt"
   `;
   return rows[0] as Product;
@@ -47,7 +47,7 @@ export async function updateProduct(id: number, input: UpdateProductInput): Prom
       source = COALESCE(${input.source}, source),
       last_seen = ${Date.now()}
     WHERE id = ${id}
-    RETURNING id, title, price, currency, link, image_url as "imageUrl", source, last_seen as "lastSeen",
+    RETURNING id, title, price, currency, price_eur as "priceEur", link, image_url as "imageUrl", source, last_seen as "lastSeen",
               created_at as "createdAt", updated_at as "updatedAt"
   `;
   return (rows[0] as Product) || null;
