@@ -21,6 +21,7 @@ export default function WatchedPage() {
   const [newUrl, setNewUrl] = useState('');
   const [newLabel, setNewLabel] = useState('');
   const [newMaxPrice, setNewMaxPrice] = useState('');
+  const [newLastPrice, setNewLastPrice] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editMaxPrice, setEditMaxPrice] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -55,7 +56,8 @@ export default function WatchedPage() {
         body: JSON.stringify({ 
           url: newUrl, 
           label: newLabel,
-          maxPrice: newMaxPrice ? parseFloat(newMaxPrice) : null 
+          maxPrice: newMaxPrice ? parseFloat(newMaxPrice) : null,
+          lastPrice: newLastPrice ? parseFloat(newLastPrice) : null 
         }),
       });
 
@@ -64,6 +66,7 @@ export default function WatchedPage() {
       setNewUrl('');
       setNewLabel('');
       setNewMaxPrice('');
+      setNewLastPrice('');
       setShowForm(false);
       await fetchWatchedUrls();
       
@@ -161,16 +164,29 @@ export default function WatchedPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Max cena (Telegram upozornenie)</label>
-                <input
-                  type="number"
-                  value={newMaxPrice}
-                  onChange={(e) => setNewMaxPrice(e.target.value)}
-                  placeholder="napr. 100"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">Pošle Telegram správu ak cena klesne pod túto hodnotu</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Aktuálna cena</label>
+                  <input
+                    type="number"
+                    value={newLastPrice}
+                    onChange={(e) => setNewLastPrice(e.target.value)}
+                    placeholder="napr. 150"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Počiatočná cena (pre prvý výber)</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Max cena (Telegram)</label>
+                  <input
+                    type="number"
+                    value={newMaxPrice}
+                    onChange={(e) => setNewMaxPrice(e.target.value)}
+                    placeholder="napr. 100"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Pošle upozornenie ak cena klesne pod</p>
+                </div>
               </div>
               <div className="flex gap-3">
                 <button

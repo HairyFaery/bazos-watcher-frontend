@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const { rows } = await sql`
       SELECT id, url, label, max_price as "maxPrice", min_price as "minPrice", last_price as "lastPrice", last_price_at as "lastPriceAt", 
-             created_at as "createdAt", updated_at as "updatedAt"
+             scrape_count as "scrapeCount", created_at as "createdAt", updated_at as "updatedAt"
       FROM watched_urls 
       ORDER BY created_at DESC
     `;
@@ -25,10 +25,10 @@ export async function POST(request: Request) {
     }
 
     const { rows } = await sql`
-      INSERT INTO watched_urls (url, label, max_price)
-      VALUES (${body.url}, ${body.label || ''}, ${body.maxPrice || null})
+      INSERT INTO watched_urls (url, label, max_price, last_price, last_price_at, scrape_count)
+      VALUES (${body.url}, ${body.label || ''}, ${body.maxPrice || null}, ${body.lastPrice || null}, ${body.lastPrice ? Date.now() : null}, ${body.lastPrice ? 1 : 0})
       RETURNING id, url, label, max_price as "maxPrice", last_price as "lastPrice", last_price_at as "lastPriceAt",
-                created_at as "createdAt", updated_at as "updatedAt"
+                scrape_count as "scrapeCount", created_at as "createdAt", updated_at as "updatedAt"
     `;
     
     return NextResponse.json(rows[0], { status: 201 });
