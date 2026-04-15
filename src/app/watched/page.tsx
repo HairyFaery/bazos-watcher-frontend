@@ -6,6 +6,7 @@ interface WatchedUrl {
   id: number;
   url: string;
   label: string;
+  maxPrice: number | null;
   lastPrice: number | null;
   lastPriceAt: number | null;
   createdAt: string;
@@ -18,6 +19,9 @@ export default function WatchedPage() {
   const [showForm, setShowForm] = useState(false);
   const [newUrl, setNewUrl] = useState('');
   const [newLabel, setNewLabel] = useState('');
+  const [newMaxPrice, setNewMaxPrice] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editMaxPrice, setEditMaxPrice] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchWatchedUrls = useCallback(async () => {
@@ -47,13 +51,18 @@ export default function WatchedPage() {
       const response = await fetch('/api/watched-urls', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: newUrl, label: newLabel }),
+        body: JSON.stringify({ 
+          url: newUrl, 
+          label: newLabel,
+          maxPrice: newMaxPrice ? parseFloat(newMaxPrice) : null 
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to add URL');
 
       setNewUrl('');
       setNewLabel('');
+      setNewMaxPrice('');
       setShowForm(false);
       await fetchWatchedUrls();
       
@@ -62,6 +71,24 @@ export default function WatchedPage() {
       setError(err instanceof Error ? err.message : 'Failed to add URL');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleUpdateMaxPrice = async (id: number) => {
+    try {
+      const response = await fetch(`/api/watched-urls/${id}?id=${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ maxPrice: editMaxPrice ? parseFloat(editMaxPrice) : null }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update');
+
+      setEditingId(null);
+      setEditMaxPrice('');
+      await fetchWatchedUrls();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update');
     }
   };
 
@@ -133,6 +160,17 @@ export default function WatchedPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Max cena (Telegram upozornenie)</label>
+                <input
+                  type="number"
+                  value={newMaxPrice}
+                  onChange={(e) => setNewMaxPrice(e.target.value)}
+                  placeholder="napr. 100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">Pošle Telegram správu ak cena klesne pod túto hodnotu</p>
+              </div>
               <div className="flex gap-3">
                 <button
                   type="submit"
@@ -172,6 +210,7 @@ export default function WatchedPage() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Názov</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max cena</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posledná cena</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontrolované</th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcie</th>
@@ -194,7 +233,47 @@ export default function WatchedPage() {
                       </a>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
+                      {editingId === item.id ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={editMaxPrice}
+                            onChange={(e) => setEditMaxPrice(e.target.value)}
+                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                            placeholder="Max"
+                          />
+                          <button
+                            onClick={() => handleUpdateMaxPrice(item.id)}
+                            className="text-green-600 hover:text-green-800 text-sm"
+                          >
+                            Uložiť
+                          </button>
+                          <button
+                            onClick={() => setEditingId(null)}
+                            className="text-gray-500 hover:text-gray-700 text-sm"
+                          >
+                            Zrušiť
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm ${item.maxPrice ? 'text-orange-600 font-medium' : 'text-gray-400'}`}>
+                            {item.maxPrice ? `${item.maxPrice} EUR` : '-'}
+                          </span>
+                          <button
+                            onClick={() => {
+                              setEditingId(item.id);
+                              setEditMaxPrice(item.maxPrice?.toString() || '');
+                            }}
+                            className="text-blue-600 hover:text-blue-800 text-sm"
+                          >
+                            Upraviť
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className={`text-sm font-medium ${item.maxPrice && item.lastPrice && item.lastPrice <= item.maxPrice ? 'text-green-600' : 'text-gray-900'}`}>
                         {item.lastPrice ? `${item.lastPrice} EUR` : '-'}
                       </div>
                     </td>

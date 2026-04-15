@@ -4,7 +4,7 @@ import { sql } from '@vercel/postgres';
 export async function GET() {
   try {
     const { rows } = await sql`
-      SELECT id, url, label, last_price as "lastPrice", last_price_at as "lastPriceAt", 
+      SELECT id, url, label, max_price as "maxPrice", last_price as "lastPrice", last_price_at as "lastPriceAt", 
              created_at as "createdAt", updated_at as "updatedAt"
       FROM watched_urls 
       ORDER BY created_at DESC
@@ -25,9 +25,9 @@ export async function POST(request: Request) {
     }
 
     const { rows } = await sql`
-      INSERT INTO watched_urls (url, label)
-      VALUES (${body.url}, ${body.label || ''})
-      RETURNING id, url, label, last_price as "lastPrice", last_price_at as "lastPriceAt",
+      INSERT INTO watched_urls (url, label, max_price)
+      VALUES (${body.url}, ${body.label || ''}, ${body.maxPrice || null})
+      RETURNING id, url, label, max_price as "maxPrice", last_price as "lastPrice", last_price_at as "lastPriceAt",
                 created_at as "createdAt", updated_at as "updatedAt"
     `;
     
