@@ -13,6 +13,10 @@ interface WatchedUrl {
   createdAt: string;
 }
 
+function getCurrency(url: string): string {
+  return url.includes('bazos.cz') ? 'CZK' : 'EUR';
+}
+
 export default function WatchedPage() {
   const [watchedUrls, setWatchedUrls] = useState<WatchedUrl[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,7 +128,7 @@ export default function WatchedPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <main className="w-full px-4 py-6 sm:px-6 lg:px-8 overflow-x-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Sledované URL</h1>
@@ -141,51 +145,51 @@ export default function WatchedPage() {
 
         {showForm && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-lg font-semibold mb-4">Nová sledovaná URL</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Nová sledovaná URL</h2>
             <form onSubmit={handleAdd} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL *</label>
+                <label className="block text-base font-medium text-gray-900 mb-1">URL *</label>
                 <input
                   type="url"
                   value={newUrl}
                   onChange={(e) => setNewUrl(e.target.value)}
                   placeholder="https://deti.bazos.sk/inzerat/123456/"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Názov</label>
+                <label className="block text-base font-medium text-gray-900 mb-1">Názov</label>
                 <input
                   type="text"
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
                   placeholder="napr. Nosic Deuter Kid Comfort"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Aktuálna cena</label>
+                  <label className="block text-base font-medium text-gray-900 mb-1">Aktuálna cena</label>
                   <input
                     type="number"
                     value={newLastPrice}
                     onChange={(e) => setNewLastPrice(e.target.value)}
                     placeholder="napr. 150"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Počiatočná cena (pre prvý výber)</p>
+                  <p className="text-sm text-gray-700 mt-1">Počiatočná cena (pre prvý výber)</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Max cena (Telegram)</label>
+                  <label className="block text-base font-medium text-gray-900 mb-1">Max cena (Telegram)</label>
                   <input
                     type="number"
                     value={newMaxPrice}
                     onChange={(e) => setNewMaxPrice(e.target.value)}
                     placeholder="napr. 100"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Pošle upozornenie ak cena klesne pod</p>
+                  <p className="text-sm text-gray-700 mt-1">Pošle upozornenie ak cena klesne pod</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -199,7 +203,7 @@ export default function WatchedPage() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded transition-colors"
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-900 py-2 px-4 rounded transition-colors"
                 >
                   Zrušiť
                 </button>
@@ -217,105 +221,108 @@ export default function WatchedPage() {
             {error}
           </div>
         ) : watchedUrls.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-900">
             Žiadne sledované URL. Pridajte prvú URL.
           </div>
         ) : (
           <div className="bg-white shadow rounded-lg overflow-x-auto">
-            <table className="w-full divide-y divide-gray-200 table-fixed">
-              <thead className="bg-gray-50">
+            <table className="w-full divide-y divide-gray-300">
+              <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Názov</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-64">URL</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Max cena</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Najnižšia</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Aktuálna</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Kontrolované</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Akcie</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-36">Názov</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-64">URL</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-24">Max cena</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-24">Najnižšia</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-24">Aktuálna</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-36">Kontrolované</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 w-20">Akcie</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {watchedUrls.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-4 py-4">
-                      <div className="text-sm font-medium text-gray-900 truncate">{item.label || '-'}</div>
-                    </td>
-                    <td className="px-4 py-4">
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 truncate block"
-                        title={item.url}
-                      >
-                        {item.url}
-                      </a>
-                    </td>
-                    <td className="px-4 py-4">
-                      {editingId === item.id ? (
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="number"
-                            value={editMaxPrice}
-                            onChange={(e) => setEditMaxPrice(e.target.value)}
-                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
-                            placeholder="Max"
-                          />
-                          <button
-                            onClick={() => handleUpdateMaxPrice(item.id)}
-                            className="text-green-600 hover:text-green-800 text-sm"
-                          >
-                            Uložiť
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-gray-500 hover:text-gray-700 text-sm"
-                          >
-                            Zrušiť
-                          </button>
+                {watchedUrls.map((item) => {
+                  const currency = getCurrency(item.url);
+                  return (
+                    <tr key={item.id}>
+                      <td className="px-4 py-4">
+                        <div className="text-base font-medium text-gray-900 truncate">{item.label || '-'}</div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-base text-blue-600 hover:text-blue-800 truncate block"
+                          title={item.url}
+                        >
+                          {item.url}
+                        </a>
+                      </td>
+                      <td className="px-4 py-4">
+                        {editingId === item.id ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={editMaxPrice}
+                              onChange={(e) => setEditMaxPrice(e.target.value)}
+                              className="w-20 px-2 py-1 border border-gray-400 rounded text-base"
+                              placeholder="Max"
+                            />
+                            <button
+                              onClick={() => handleUpdateMaxPrice(item.id)}
+                              className="text-green-600 hover:text-green-800 text-base"
+                            >
+                              Uložiť
+                            </button>
+                            <button
+                              onClick={() => setEditingId(null)}
+                              className="text-gray-600 hover:text-gray-800 text-base"
+                            >
+                              Zrušiť
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className={`text-base ${item.maxPrice ? 'text-orange-600 font-semibold' : 'text-gray-500'}`}>
+                              {item.maxPrice ? `${item.maxPrice} ${currency}` : '-'}
+                            </span>
+                            <button
+                              onClick={() => {
+                                setEditingId(item.id);
+                                setEditMaxPrice(item.maxPrice?.toString() || '');
+                              }}
+                              className="text-blue-600 hover:text-blue-800 text-base"
+                            >
+                              Upraviť
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="text-base font-semibold text-green-600">
+                          {item.minPrice ? `${item.minPrice} ${currency}` : '-'}
                         </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <span className={`text-sm ${item.maxPrice ? 'text-orange-600 font-medium' : 'text-gray-400'}`}>
-                            {item.maxPrice ? `${item.maxPrice} EUR` : '-'}
-                          </span>
-                          <button
-                            onClick={() => {
-                              setEditingId(item.id);
-                              setEditMaxPrice(item.maxPrice?.toString() || '');
-                            }}
-                            className="text-blue-600 hover:text-blue-800 text-sm"
-                          >
-                            Upraviť
-                          </button>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className={`text-base font-semibold ${item.maxPrice && item.lastPrice && item.lastPrice <= item.maxPrice ? 'text-green-600' : 'text-gray-900'}`}>
+                          {item.lastPrice ? `${item.lastPrice} ${currency}` : '-'}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className="text-sm font-medium text-green-600">
-                        {item.minPrice ? `${item.minPrice} EUR` : '-'}
-                      </div>
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className={`text-sm font-medium ${item.maxPrice && item.lastPrice && item.lastPrice <= item.maxPrice ? 'text-green-600' : 'text-gray-900'}`}>
-                        {item.lastPrice ? `${item.lastPrice} EUR` : '-'}
-                      </div>
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className="text-sm text-gray-500 truncate">
-                        {formatDate(item.lastPriceAt)}
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-600 hover:text-red-800 text-sm"
-                      >
-                        Vymazať
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="text-base text-gray-900 truncate">
+                          {formatDate(item.lastPriceAt)}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-right">
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="text-red-600 hover:text-red-800 text-base"
+                        >
+                          Vymazať
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
