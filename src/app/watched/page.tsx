@@ -122,7 +122,7 @@ export default function WatchedPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <main className="w-full px-4 py-6 sm:px-6 lg:px-8 overflow-x-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Sledované URL</h1>
           <button
@@ -205,36 +205,37 @@ export default function WatchedPage() {
             Žiadne sledované URL. Pridajte prvú URL.
           </div>
         ) : (
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white shadow rounded-lg overflow-x-auto">
+            <table className="w-full divide-y divide-gray-200 table-fixed">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Názov</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max cena</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Najnižšia</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktuálna</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontrolované</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcie</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Názov</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-64">URL</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Max cena</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Najnižšia</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Aktuálna</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Kontrolované</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Akcie</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {watchedUrls.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{item.label || '-'}</div>
+                    <td className="px-4 py-4">
+                      <div className="text-sm font-medium text-gray-900 truncate">{item.label || '-'}</div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <a
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 truncate block max-w-xs"
+                        className="text-sm text-blue-600 hover:text-blue-800 truncate block"
+                        title={item.url}
                       >
                         {item.url}
                       </a>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-4">
                       {editingId === item.id ? (
                         <div className="flex items-center gap-2">
                           <input
@@ -274,23 +275,25 @@ export default function WatchedPage() {
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-4">
                       <div className="text-sm font-medium text-green-600">
                         {item.minPrice ? `${item.minPrice} EUR` : '-'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-4">
                       <div className={`text-sm font-medium ${item.maxPrice && item.lastPrice && item.lastPrice <= item.maxPrice ? 'text-green-600' : 'text-gray-900'}`}>
                         {item.lastPrice ? `${item.lastPrice} EUR` : '-'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(item.lastPriceAt)}
+                    <td className="px-4 py-4">
+                      <div className="text-sm text-gray-500 truncate">
+                        {formatDate(item.lastPriceAt)}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <td className="px-4 py-4 text-right">
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="text-red-600 hover:text-red-800"
+                        className="text-red-600 hover:text-red-800 text-sm"
                       >
                         Vymazať
                       </button>
