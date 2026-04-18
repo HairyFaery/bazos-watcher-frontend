@@ -42,14 +42,14 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-      <h2 className="text-xl font-semibold mb-4">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-zinc-200 dark:border-slate-700 p-6">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-6">
         {product ? 'Upraviť produkt' : 'Pridať nový produkt'}
       </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="title" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
             Názov *
           </label>
           <input
@@ -58,13 +58,13 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="price" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Cena *
             </label>
             <input
@@ -75,19 +75,19 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
               required
               min="0"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="currency" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Mena
             </label>
             <select
               id="currency"
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="EUR">EUR</option>
               <option value="CZK">CZK</option>
@@ -97,7 +97,7 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
         </div>
 
         <div>
-          <label htmlFor="link" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="link" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
             Odkaz *
           </label>
           <input
@@ -106,12 +106,12 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
             value={formData.link}
             onChange={(e) => setFormData({ ...formData, link: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
         </div>
 
         <div>
-          <label htmlFor="source" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="source" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
             Zdroj
           </label>
           <input
@@ -120,7 +120,7 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
             value={formData.source}
             onChange={(e) => setFormData({ ...formData, source: e.target.value })}
             placeholder="napr. bazos.sk, manual"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
         </div>
 
@@ -128,14 +128,14 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-2 px-4 rounded transition-colors"
+            className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white py-2.5 px-4 rounded-lg transition-colors font-medium"
           >
             {isSubmitting ? 'Ukladám...' : 'Uložiť'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded transition-colors"
+            className="flex-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-zinc-700 dark:text-zinc-200 py-2.5 px-4 rounded-lg transition-colors font-medium"
           >
             Zrušiť
           </button>

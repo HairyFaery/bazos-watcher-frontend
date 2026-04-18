@@ -27,7 +27,7 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
     currency: 'EUR',
     whitelist: '',
     blacklist: '',
-    locations: ['sk'],
+    locations: ['sk'] as string[],
     active: true,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,64 +78,63 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-      <h2 className="text-xl font-semibold mb-4">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-zinc-200 dark:border-slate-700 p-6">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-6">
         {config ? 'Upraviť vyhľadávanie' : 'Nové vyhľadávanie'}
       </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Názov *</label>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Názov *</label>
           <input
             type="text"
             value={formData.label}
             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
             required
             placeholder="napr. Deuter Kid Comfort"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Kľúčové slovo *</label>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Kľúčové slovo *</label>
           <input
             type="text"
             value={formData.keyword}
             onChange={(e) => setFormData({ ...formData, keyword: e.target.value })}
             required
             placeholder="napr. deuter+kid+comfort"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Min cena</label>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Min cena</label>
             <input
               type="number"
               value={formData.minPrice}
               onChange={(e) => setFormData({ ...formData, minPrice: Number(e.target.value) })}
               min="0"
-              placeholder="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Max cena</label>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Max cena</label>
             <input
               type="number"
               value={formData.maxPrice}
               onChange={(e) => setFormData({ ...formData, maxPrice: Number(e.target.value) })}
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mena</label>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Mena</label>
             <select
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="EUR">EUR</option>
               <option value="CZK">CZK</option>
@@ -144,57 +143,58 @@ export default function SearchConfigForm({ config, onSave, onCancel }: SearchCon
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Lokality</label>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Lokality</label>
           <div className="flex flex-wrap gap-2">
             {LOCATION_OPTIONS.map(opt => (
-              <label key={opt.value} className="flex items-center gap-1 px-3 py-1.5 border rounded cursor-pointer hover:bg-gray-50">
+              <label key={opt.value} className="flex items-center gap-2 px-3 py-2 border border-zinc-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-slate-700 transition-colors">
                 <input
                   type="checkbox"
                   checked={formData.locations.includes(opt.value)}
                   onChange={() => handleLocationToggle(opt.value)}
+                  className="w-4 h-4 rounded border-zinc-300 text-emerald-500 focus:ring-emerald-500"
                 />
-                <span className="text-sm">{opt.label}</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">{opt.label}</span>
               </label>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Whitelist (čo musí obsahovať)</label>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Whitelist (čo musí obsahovať)</label>
           <input
             type="text"
             value={formData.whitelist}
             onChange={(e) => setFormData({ ...formData, whitelist: e.target.value })}
             placeholder="napr. kid comfort, comfort pro"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
-          <p className="text-xs text-gray-500 mt-1">Oddelené čiarkou</p>
+          <p className="text-xs text-zinc-500 dark:text-slate-400 mt-1">Oddelené čiarkou</p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Blacklist (čo nesmie obsahovať)</label>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Blacklist (čo nesmie obsahovať)</label>
           <input
             type="text"
             value={formData.blacklist}
             onChange={(e) => setFormData({ ...formData, blacklist: e.target.value })}
             placeholder="napr. comfort 1, comfort 2, prenájom"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-zinc-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
-          <p className="text-xs text-gray-500 mt-1">Oddelené čiarkou</p>
+          <p className="text-xs text-zinc-500 dark:text-slate-400 mt-1">Oddelené čiarkou</p>
         </div>
 
         <div className="flex gap-3 pt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-2 px-4 rounded transition-colors"
+            className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white py-2.5 px-4 rounded-lg transition-colors font-medium"
           >
             {isSubmitting ? 'Ukladám...' : 'Uložiť'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded transition-colors"
+            className="flex-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-zinc-700 dark:text-zinc-200 py-2.5 px-4 rounded-lg transition-colors font-medium"
           >
             Zrušiť
           </button>

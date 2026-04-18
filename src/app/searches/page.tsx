@@ -5,6 +5,14 @@ import { SearchConfig } from '@/lib/types';
 import SearchConfigCard from '@/components/SearchConfigCard';
 import SearchConfigForm from '@/components/SearchConfigForm';
 
+function PlusIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    </svg>
+  );
+}
+
 export default function SearchesPage() {
   const [configs, setConfigs] = useState<SearchConfig[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,29 +100,28 @@ export default function SearchesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Vyhľadávania</h1>
+    <div className="min-h-screen bg-zinc-50 dark:bg-slate-900">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Vyhľadávania</h1>
           <button
             onClick={() => {
               setEditingConfig(null);
               setShowForm(true);
             }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg transition-colors font-medium shadow-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <PlusIcon />
             Pridať vyhľadávanie
           </button>
         </div>
+
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-2 border-emerald-500 border-t-transparent"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
             {error}
           </div>
         ) : showForm ? (
@@ -126,11 +133,11 @@ export default function SearchesPage() {
             />
           </div>
         ) : configs.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-16 text-zinc-500 dark:text-zinc-400 bg-white dark:bg-slate-800 rounded-xl border border-zinc-200 dark:border-slate-700">
             Žiadne vyhľadávania. Pridajte svoje prvé vyhľadávanie.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {configs.map((config) => (
               <SearchConfigCard
                 key={config.id}
@@ -142,7 +149,7 @@ export default function SearchesPage() {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

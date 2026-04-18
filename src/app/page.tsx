@@ -6,6 +6,22 @@ import ProductList from '@/components/ProductList';
 import ProductForm from '@/components/ProductForm';
 import SearchBar from '@/components/SearchBar';
 
+function PlusIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,25 +129,23 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Produkty</h1>
+    <div className="min-h-screen bg-zinc-50 dark:bg-slate-900">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Produkty</h1>
           <button
             onClick={() => {
               setEditingProduct(null);
               setShowForm(true);
             }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg transition-colors font-medium shadow-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <PlusIcon />
             Pridať produkt
           </button>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 max-w-xl">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
@@ -140,23 +154,24 @@ export default function Home() {
         </div>
 
         {!showForm && filteredProducts.length > 0 && (
-          <div className="mb-4 flex items-center gap-4">
+          <div className="mb-6 flex items-center gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={selectedIds.size === filteredProducts.length && filteredProducts.length > 0}
                 onChange={handleSelectAll}
-                className="w-4 h-4 rounded border-gray-300"
+                className="w-4 h-4 rounded border-zinc-300 dark:border-slate-600 text-emerald-500 focus:ring-emerald-500"
               />
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-zinc-600 dark:text-zinc-300">
                 {selectedIds.size === filteredProducts.length ? 'Odznačiť všetko' : 'Označiť všetko'}
               </span>
             </label>
             {selectedIds.size > 0 && (
               <button
                 onClick={handleBulkDelete}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors text-sm"
+                className="inline-flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
               >
+                <TrashIcon />
                 Vymazať ({selectedIds.size})
               </button>
             )}
@@ -164,11 +179,11 @@ export default function Home() {
         )}
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-2 border-emerald-500 border-t-transparent"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
             {error}
           </div>
         ) : showForm ? (
@@ -188,7 +203,7 @@ export default function Home() {
             onSelect={handleSelect}
           />
         )}
-      </main>
+      </div>
     </div>
   );
 }
