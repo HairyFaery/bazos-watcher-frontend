@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const { rows } = await sql`
       SELECT id, url, label, max_price as "maxPrice", min_price as "minPrice", last_price as "lastPrice", last_price_at as "lastPriceAt", 
-             scrape_count as "scrapeCount", created_at as "createdAt", updated_at as "updatedAt"
+             scrape_count as "scrapeCount", is_active as "isActive", created_at as "createdAt", updated_at as "updatedAt"
       FROM watched_urls 
       ORDER BY created_at DESC
     `;

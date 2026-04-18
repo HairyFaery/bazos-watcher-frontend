@@ -11,6 +11,7 @@ interface WatchedUrl {
   minPrice: number | null;
   lastPrice: number | null;
   lastPriceAt: number | null;
+  isActive: boolean | null;
   createdAt: string;
 }
 
@@ -259,7 +260,7 @@ export default function WatchedPage() {
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
             {error}
           </div>
-        ) : watchedUrls.length === 0 ? (
+        ) : watchedUrls.filter(w => w.isActive !== false).length === 0 ? (
           <div className="text-center py-16 text-zinc-500 dark:text-zinc-400 bg-white dark:bg-slate-800 rounded-xl border border-zinc-200 dark:border-slate-700">
             Žiadne sledované URL. Pridajte prvú URL.
           </div>
@@ -278,7 +279,7 @@ export default function WatchedPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100 dark:divide-slate-700">
-                {watchedUrls.map((item) => {
+                {watchedUrls.filter(w => w.isActive !== false).map((item) => {
                   const currency = getCurrency(item.url);
                   return (
                     <tr key={item.id} className="hover:bg-zinc-50 dark:hover:bg-slate-700/30 transition-colors">
