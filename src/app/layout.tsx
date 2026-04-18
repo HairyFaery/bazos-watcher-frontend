@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Sidebar from "@/components/Sidebar";
+import ClientLayout from "./ClientLayout";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,16 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sk" suppressHydrationWarning>
-      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 ml-60">
-              {children}
-            </main>
-          </div>
-        </ThemeProvider>
+    <html lang="sk" className="dark">
+      <body className={`${inter.variable} ${geistMono.variable} antialiased bg-slate-900 text-slate-50`}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

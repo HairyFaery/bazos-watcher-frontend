@@ -8,19 +8,6 @@
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #18181b;
-  --muted: #a1a1aa;
-  --muted-foreground: #71717a;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #10b981;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-}
-
-.dark {
   --background: #0f172a;
   --foreground: #f8fafc;
   --muted: #94a3b8;
@@ -28,6 +15,9 @@
   --border: #334155;
   --input: #334155;
   --ring: #10b981;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 * {
@@ -55,18 +45,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #475569;
   border-radius: 4px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
-}
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }

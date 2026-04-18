@@ -6,6 +6,7 @@ interface ProductCardProps {
   product: Product;
   onEdit: (product: Product) => void;
   onDelete: (id: number) => void;
+  onWatch: (product: Product) => void;
   isSelected: boolean;
   onSelect: () => void;
 }
@@ -34,7 +35,16 @@ function TrashIcon() {
   );
 }
 
-export default function ProductCard({ product, onEdit, onDelete, isSelected, onSelect }: ProductCardProps) {
+function EyeIcon() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    </svg>
+  );
+}
+
+export default function ProductCard({ product, onEdit, onDelete, onWatch, isSelected, onSelect }: ProductCardProps) {
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('sk-SK', {
       day: '2-digit',
@@ -49,16 +59,16 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onS
 
   return (
     <div className={`
-      bg-white dark:bg-slate-800 rounded-xl border transition-all duration-150
-      hover:shadow-lg hover:border-emerald-200 dark:hover:border-emerald-700/50
+      bg-slate-800 rounded-xl border transition-all duration-150
+      hover:shadow-lg hover:border-emerald-700/50
       ${isSelected 
-        ? 'border-emerald-500 ring-2 ring-emerald-200 dark:ring-emerald-800' 
-        : 'border-zinc-200 dark:border-slate-700'
+        ? 'border-emerald-500 ring-2 ring-emerald-800' 
+        : 'border-slate-700'
       }
     `}>
       {isNew && (
-        <div className="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/50 rounded-t-xl border-b border-emerald-200 dark:border-emerald-800">
-          <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">NOVÉ</span>
+        <div className="px-3 py-1.5 bg-emerald-900/50 rounded-t-xl border-b border-emerald-800">
+          <span className="text-xs font-medium text-emerald-300">NOVÉ</span>
         </div>
       )}
       
@@ -68,10 +78,10 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onS
             type="checkbox"
             checked={isSelected}
             onChange={onSelect}
-            className="mt-1 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
+            className="mt-1 w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
           />
           {product.imageUrl && (
-            <div className="relative w-full h-40 bg-zinc-100 dark:bg-slate-700 rounded-lg overflow-hidden">
+            <div className="relative w-full h-40 bg-slate-700 rounded-lg overflow-hidden">
               <img
                 src={product.imageUrl}
                 alt={product.title}
@@ -84,23 +94,23 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onS
           )}
         </div>
         
-        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-2 mb-3 leading-snug">
+        <h3 className="font-semibold text-slate-100 line-clamp-2 mb-3 leading-snug">
           {product.title}
         </h3>
         
         <div className="flex items-baseline justify-between mb-3">
-          <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+          <span className="text-xl font-bold text-emerald-400 font-mono">
             {product.price} {product.currency}
           </span>
           {product.priceEur && product.currency === 'CZK' && (
-            <span className="text-sm text-zinc-500 dark:text-slate-400">
+            <span className="text-sm text-slate-400">
               (~{product.priceEur} EUR)
             </span>
           )}
         </div>
         
-        <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-slate-400 mb-4">
-          <span className="inline-flex items-center px-2 py-0.5 bg-zinc-100 dark:bg-slate-700 rounded text-xs font-medium">
+        <div className="flex items-center gap-2 text-sm text-slate-400 mb-4">
+          <span className="inline-flex items-center px-2 py-0.5 bg-slate-700 rounded text-xs font-medium">
             {product.source}
           </span>
           <span>Videné: {formatDate(product.lastSeen)}</span>
@@ -111,20 +121,27 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onS
             href={product.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white py-2 px-3 rounded-lg transition-colors text-sm font-medium"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg transition-colors text-sm font-medium"
           >
             Otvoriť <ExternalIcon />
           </a>
           <button
+            onClick={() => onWatch(product)}
+            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-900/30 rounded-lg transition-colors"
+            title="Sledovať"
+          >
+            <EyeIcon />
+          </button>
+          <button
             onClick={() => onEdit(product)}
-            className="p-2 text-zinc-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-emerald-900/30 rounded-lg transition-colors"
+            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-900/30 rounded-lg transition-colors"
             title="Upraviť"
           >
             <EditIcon />
           </button>
           <button
             onClick={() => onDelete(product.id)}
-            className="p-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-900/30 rounded-lg transition-colors"
             title="Vymazať"
           >
             <TrashIcon />

@@ -5,6 +5,7 @@ import { Product, CreateProductInput } from '@/lib/types';
 import ProductList from '@/components/ProductList';
 import ProductForm from '@/components/ProductForm';
 import SearchBar from '@/components/SearchBar';
+import WatchModal from '@/components/WatchModal';
 
 function PlusIcon() {
   return (
@@ -30,6 +31,9 @@ export default function Home() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  const [watchModalOpen, setWatchModalOpen] = useState(false);
+  const [watchingProduct, setWatchingProduct] = useState<Product | null>(null);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -89,6 +93,29 @@ export default function Home() {
     await fetchProducts();
   };
 
+  const handleWatch = (product: Product) => {
+    setWatchingProduct(product);
+    setWatchModalOpen(true);
+  };
+
+  const handleWatchConfirm = async (maxPrice: number | null) => {
+    if (!watchingProduct) return;
+
+    await fetch('/api/watched-urls', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url: watchingProduct.link,
+        label: watchingProduct.title,
+        maxPrice: maxPrice,
+        lastPrice: watchingProduct.price,
+      }),
+    });
+
+    setWatchModalOpen(false);
+    setWatchingProduct(null);
+  };
+
   const handleCancel = () => {
     setShowForm(false);
     setEditingProduct(null);
@@ -129,10 +156,10 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-slate-900">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Produkty</h1>
+          <h1 className="text-2xl font-bold text-slate-100">Produkty</h1>
           <button
             onClick={() => {
               setEditingProduct(null);
@@ -160,9 +187,9 @@ export default function Home() {
                 type="checkbox"
                 checked={selectedIds.size === filteredProducts.length && filteredProducts.length > 0}
                 onChange={handleSelectAll}
-                className="w-4 h-4 rounded border-zinc-300 dark:border-slate-600 text-emerald-500 focus:ring-emerald-500"
+                className="w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500"
               />
-              <span className="text-sm text-zinc-600 dark:text-zinc-300">
+              <span className="text-sm text-slate-300">
                 {selectedIds.size === filteredProducts.length ? 'Odznačiť všetko' : 'Označiť všetko'}
               </span>
             </label>
@@ -183,7 +210,7 @@ export default function Home() {
             <div className="animate-spin rounded-full h-10 w-10 border-2 border-emerald-500 border-t-transparent"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
+          <div className="bg-red-900/20 border border-red-800 text-red-300 px-4 py-3 rounded-lg">
             {error}
           </div>
         ) : showForm ? (
@@ -199,11 +226,24 @@ export default function Home() {
             products={filteredProducts}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onWatch={handleWatch}
             selectedIds={selectedIds}
             onSelect={handleSelect}
           />
         )}
       </div>
+
+      {watchingProduct && (
+        <WatchModal
+          product={watchingProduct}
+          isOpen={watchModalOpen}
+          onClose={() => {
+            setWatchModalOpen(false);
+            setWatchingProduct(null);
+          }}
+          onConfirm={handleWatchConfirm}
+        />
+      )}
     </div>
   );
 }

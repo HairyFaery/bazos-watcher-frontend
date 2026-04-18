@@ -7,11 +7,12 @@ interface ProductListProps {
   products: Product[];
   onEdit: (product: Product) => void;
   onDelete: (id: number) => void;
+  onWatch: (product: Product) => void;
   selectedIds: Set<number>;
   onSelect: (id: number) => void;
 }
 
-export default function ProductList({ products, onEdit, onDelete, selectedIds, onSelect }: ProductListProps) {
+export default function ProductList({ products, onEdit, onDelete, onWatch, selectedIds, onSelect }: ProductListProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-16 text-zinc-500 dark:text-zinc-400">
@@ -28,6 +29,7 @@ export default function ProductList({ products, onEdit, onDelete, selectedIds, o
           product={product}
           onEdit={onEdit}
           onDelete={onDelete}
+          onWatch={onWatch}
           isSelected={selectedIds.has(product.id)}
           onSelect={() => onSelect(product.id)}
         />
