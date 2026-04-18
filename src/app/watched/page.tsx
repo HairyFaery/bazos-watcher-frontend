@@ -145,7 +145,7 @@ export default function WatchedPage() {
     if (!confirm('Naozaj chcete vymazať túto URL?')) return;
 
     try {
-      const response = await fetch(`/api/watched-urls/${id}`, {
+      const response = await fetch(`/api/watched-urls/${id}?id=${id}`, {
         method: 'DELETE',
       });
 
