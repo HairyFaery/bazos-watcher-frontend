@@ -287,7 +287,7 @@ export default function WatchedPage() {
                           href={`/watched/${item.id}`}
                           className="flex items-center gap-2 group"
                         >
-                          <span className="text-sm font-medium text-slate-100 group-hover:text-emerald-400 truncate max-w-[100px]">
+                          <span className="text-sm font-medium text-slate-100 group-hover:text-emerald-400 truncate max-w-[200px]" title={item.label}>
                             {item.label || '-'}
                           </span>
                           <ChartIcon />

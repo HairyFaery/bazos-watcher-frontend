@@ -101,7 +101,7 @@ export default function Home() {
   const handleWatchConfirm = async (maxPrice: number | null) => {
     if (!watchingProduct) return;
 
-    await fetch('/api/watched-urls', {
+    const response = await fetch('/api/watched-urls', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -111,6 +111,11 @@ export default function Home() {
         lastPrice: watchingProduct.price,
       }),
     });
+
+    if (response.ok && watchingProduct.id) {
+      await fetch(`/api/products/${watchingProduct.id}`, { method: 'DELETE' });
+      await fetchProducts();
+    }
 
     setWatchModalOpen(false);
     setWatchingProduct(null);
